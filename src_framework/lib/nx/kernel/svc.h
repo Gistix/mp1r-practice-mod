@@ -1219,3 +1219,11 @@ Result svcSetResourceLimitLimitValue(Handle reslimit, LimitableResource which, u
 u64 svcCallSecureMonitor(SecmonArgs* regs);
 
 ///@}
+
+u32 svcGetVRFOV(void);
+
+u32 svcGetVRIPD(void);
+
+Result svcSignalVRLeftEye(void);
+
+Result svcSignalVRRightEye(void);

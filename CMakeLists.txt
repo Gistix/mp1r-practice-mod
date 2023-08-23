@@ -58,9 +58,9 @@ target_link_libraries(subsdk9 ${LOCAL_LIBRARIES})
 ## Prepare subsdk ld
 set(SUBSDK_LD_PATH ${CMAKE_CURRENT_SOURCE_DIR}/module/subsdk9.ld)
 execute_process(COMMAND uname OUTPUT_VARIABLE uname)
-if (uname MATCHES "^MINGW")
-  string(REGEX REPLACE "^/([a-zA-Z])/" "\\1:/" SUBSDK_LD_PATH "${SUBSDK_LD_PATH}")
-endif ()
+
+string(REGEX REPLACE "^/([a-zA-Z])/" "\\1:/" SUBSDK_LD_PATH "${SUBSDK_LD_PATH}")
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/module/subsdk9.specs.template ${CMAKE_CURRENT_BINARY_DIR}/subsdk9.specs)
 
 ## Build nso & generate npdm

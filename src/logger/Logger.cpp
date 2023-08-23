@@ -74,7 +74,7 @@ void Logger::log(const char *fmt, ...) {
   char buffer[0x500] = {};
 
   if (nn::util::VSNPrintf(buffer, sizeof(buffer), fmt, args) > 0) {
-
+    
     if (ISEMU) {
       svcOutputDebugString(buffer, strlen(buffer));
     } else {

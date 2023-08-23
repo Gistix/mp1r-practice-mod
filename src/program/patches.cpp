@@ -22,7 +22,7 @@ using namespace nlohmann;
 
 PatchConfig PATCH_CONFIG{};
 CStateManager *mostRecentStateManager;
-
+bool left = true;
 
 HOOK_DEFINE_INLINE(Dash_ScanVisorCheck) {
   static void Callback(exl::hook::InlineCtx *ctx) {
@@ -176,6 +176,37 @@ HOOK_DEFINE_TRAMPOLINE(CFirstPersonCameraMP1_Think){
   static void Callback(CFirstPersonCameraMP1* self, float dt, CStateManager& mgr) {
     GUI::fpCamera = self;
     Orig(self, dt, mgr);
+
+    int eyeOffst = 0;
+
+    union {
+      float floatValue;
+      u32 uintValue;
+    } u;
+    u.uintValue = svcGetVRIPD();
+
+    float ipd = u.floatValue;
+
+    if (left) {
+      eyeOffst = -1;
+      svcSignalVRLeftEye();
+    } else {
+      eyeOffst = 1;
+      svcSignalVRRightEye();
+    }
+
+    left = !left;
+
+    CVector3f offset = CVector3f(eyeOffst * ipd, 0, 0);
+    CTransform4f transform = self->GetTransform();
+    offset = transform.Rotate(offset);
+
+    transform.x += offset.x;
+    transform.y += offset.y;
+    transform.z += offset.z;
+
+    self->SetTransform(transform);
+
     if (std::abs(GUI::viewRoll) > 0.01) {
       auto roll = CRelAngle(RAD(GUI::viewRoll));
       auto fpCamXf = self->GetTransform();
@@ -189,14 +220,21 @@ HOOK_DEFINE_TRAMPOLINE(CFirstPersonCameraMP1_Think){
 HOOK_DEFINE_TRAMPOLINE(CGameCameraMP1_UpdateFOV){
   static void Callback(CGameCameraMP1* self, float dt) {
     if (self == GUI::fpCamera && GUI::shouldUpdateVerticalFov) {
-        *self->GetCurrentFOV() = GUI::verticalFov;
+
+        union {
+            float floatValue;
+            u32 uintValue;
+        } u;
+        u.uintValue = svcGetVRFOV();
+
+        *self->GetCurrentFOV() = u.floatValue;
         GUI::shouldUpdateVerticalFov = false;
     } else {
       Orig(self, dt);
     }
-    if (self == GUI::fpCamera) {
+    /*if (self == GUI::fpCamera) {
       GUI::verticalFov = *self->GetCurrentFOV();
-    }
+    }*/
   }
 };
 

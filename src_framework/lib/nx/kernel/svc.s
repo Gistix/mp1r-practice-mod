@@ -645,3 +645,23 @@ SVC_BEGIN svcCallSecureMonitor
 	stp x6, x7, [x8, #0x30]
 	ret
 SVC_END
+
+SVC_BEGIN svcGetVRFOV
+	svc 0x80
+	ret
+SVC_END
+
+SVC_BEGIN svcGetVRIPD
+	svc 0x81
+	ret
+SVC_END
+
+SVC_BEGIN svcSignalVRLeftEye
+	svc 0x82
+	ret
+SVC_END
+
+SVC_BEGIN svcSignalVRRightEye
+	svc 0x83
+	ret
+SVC_END

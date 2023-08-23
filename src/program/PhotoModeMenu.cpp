@@ -14,7 +14,7 @@ namespace GUI {
   bool is_time_stopped = false;
   const float defaultFirstPersonFov = CCameraManagerMP1::GetDefaultFirstPersonVerticalFOV();
   float verticalFov = defaultFirstPersonFov;
-  bool shouldUpdateVerticalFov = false;
+  bool shouldUpdateVerticalFov = true;
   float viewRoll = 0.f;
   CGameCameraMP1* fpCamera = nullptr;
   float exposure;
